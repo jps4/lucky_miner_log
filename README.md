@@ -9,6 +9,6 @@ Best diff: 94.06M    Last diff: 73.53K    Pool diff: 4.10K    Shares: 31    Hash
 
 Generates luckyminer.*.log files, use tail and regex like
 
-tail -f "$(ls -1tRh | head -n 2 | grep luckyminer)" -n 100000 | grep -E "Nonce difficulty [0-9]{6,}"
+$ tail -f "$(ls -1tRh | head -n 2 | grep luckyminer)" -n 100000 | grep -E "Nonce difficulty [0-9]{6,}"
 
 to search for best difficulties.
