@@ -1,6 +1,6 @@
 # lucky_miner_log
 
-Uses websockets to connect to a lucky miner (sha256 miner) and show real time data.
+Uses websockets to connect to a lucky miner (sha256 miner) and show real time data (change ip = "192.168.1.80" to your real luckyminer IP address)
 
 $ python3 luckylogs.py
 
