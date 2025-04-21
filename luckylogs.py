@@ -127,31 +127,37 @@ async def get_logs():
                     # print(f"Conectado al WebSocket en {url_websocket}")
                     
                     start_time_change_pool_diff = time.time()
-                    while True:
-                        message = await websocket.recv()
-                        lucky_log.write(message)
-                        found_diff = current_diff_pattern.search(message)
-                        if found_diff:
-                            data['last_diff'] = float(found_diff.group(1))
-                            if data['last_diff'] > data['best_diff']:
-                                data['best_diff'] = data['last_diff']
-                            if float(found_diff.group(2)) != data['pool_diff']:
-                                data['pool_diff'] = float(found_diff.group(2))
-                                data['current_shares'] = 0
-                                start_time_change_pool_diff = time.time()
-                            if data['last_diff'] > data['pool_diff']:
-                                data['shares'] += 1
-                                data['current_shares'] += 1
+                    try:
+                        while True:
+                            message = await websocket.recv()
+                            lucky_log.write(message)
+                            found_diff = current_diff_pattern.search(message)
+                            if found_diff:
+                                data['last_diff'] = float(found_diff.group(1))
+                                if data['last_diff'] > data['best_diff']:
+                                    data['best_diff'] = data['last_diff']
+                                if float(found_diff.group(2)) != data['pool_diff']:
+                                    data['pool_diff'] = float(found_diff.group(2))
+                                    data['current_shares'] = 0
+                                    start_time_change_pool_diff = time.time()
+                                if data['last_diff'] > data['pool_diff']:
+                                    data['shares'] += 1
+                                    data['current_shares'] += 1
 
-                                lucky_info = {**lucky_info, **update_lucky_info(lucky_info_url)}
+                                    lucky_info = {**lucky_info, **update_lucky_info(lucky_info_url)}
 
-                        data = { **data, **update_session(start_time, start_time_change_pool_diff, data['best_session'])}
-                        print_data(data, lucky_info)
-
+                            data = { **data, **update_session(start_time, start_time_change_pool_diff, data['best_session'])}
+                            print_data(data, lucky_info)
+                    except KeyboardInterrupt:
+                        await websocket.close()
+                        raise
             except websockets.ConnectionClosed as e:
                 pass
+            except KeyboardInterrupt:
+                print("Ctrl+C, exiting...")
             except Exception as e:
                 pass
+
 
 
 asyncio.get_event_loop().run_until_complete(get_logs())
